@@ -7,27 +7,17 @@
 
 using namespace std;
 
-// Функция приведения расширенной матрицы системы к ступенчатому виду
-// Параметры:
-//   a - двумерный динамический массив (расширенная матрица)
-//   m - количество уравнений
-//   n - количество неизвестных
-// Возвращает ранг матрицы системы (без учета столбца свободных членов)
+
 int gaussJordanToEchelon(double** a, int m, int n) {
-    /*
-     * Элементарные преобразования матриц, используемые в методе Гаусса-Жордана:
-     * 1. Перестановка строк (строки можно менять местами)
-     * 2. Умножение строки на ненулевое число
-     * 3. Прибавление к одной строке другой строки, умноженной на число
-     */
+  
 
-    int rank = 0;           // ранг матрицы
-    int row = 0;            // текущая строка
-    int col = 0;            // текущий столбец
+    int rank = 0;          
+    int row = 0;            
+    int col = 0;           
 
-    // Проходим по столбцам коэффициентов (от 0 до n-1)
+    
     while (row < m && col < n) {
-        // Поиск ненулевого элемента в текущем столбце, начиная с текущей строки
+        
         int pivotRow = -1;
         for (int i = row; i < m; i++) {
             if (fabs(a[i][col]) > 1e-9) {
@@ -36,26 +26,26 @@ int gaussJordanToEchelon(double** a, int m, int n) {
             }
         }
 
-        // Если в столбце нет ненулевых элементов, переходим к следующему столбцу
+        
         if (pivotRow == -1) {
             col++;
             continue;
         }
 
-        // Перестановка строк, чтобы ведущий элемент оказался на позиции (row, col)
+        
         if (pivotRow != row) {
             for (int j = col; j <= n; j++) {
                 swap(a[row][j], a[pivotRow][j]);
             }
         }
 
-        // Нормируем ведущую строку (делим на ведущий элемент)
+        
         double pivot = a[row][col];
         for (int j = col; j <= n; j++) {
             a[row][j] /= pivot;
         }
 
-        // Обнуляем элементы ниже текущей строки в этом столбце
+        
         for (int i = row + 1; i < m; i++) {
             double factor = a[i][col];
             if (fabs(factor) > 1e-9) {
@@ -73,7 +63,7 @@ int gaussJordanToEchelon(double** a, int m, int n) {
     return rank;
 }
 
-// Функция для вывода матрицы в консоль (для отладки)
+
 void printMatrix(double** a, int m, int n) {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j <= n; j++) {
@@ -83,7 +73,7 @@ void printMatrix(double** a, int m, int n) {
     }
 }
 
-// Функция для вывода матрицы в файл
+
 void printMatrixToFile(ofstream& out, double** a, int m, int n) {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j <= n; j++) {
@@ -103,9 +93,9 @@ int main() {
     }
 
     int m, n;
-    input >> m >> n;  // m - количество уравнений, n - количество неизвестных
+    input >> m >> n;  
 
-    // Выделение памяти под расширенную матрицу (m строк, n+1 столбцов)
+    
     double** matrix = new double* [m];
     for (int i = 0; i < m; i++) {
         matrix[i] = new double[n + 1];
@@ -119,19 +109,19 @@ int main() {
     printMatrix(matrix, m, n);
     cout << endl;
 
-    // Приведение матрицы к ступенчатому виду
+    
     int rank = gaussJordanToEchelon(matrix, m, n);
 
     cout << "Матрица после приведения к ступенчатому виду:" << endl;
     printMatrix(matrix, m, n);
     cout << "\nРанг матрицы системы: " << rank << endl;
 
-    // Запись результата в выходной файл
+    
     ofstream output("output.txt");
     if (!output.is_open()) {
         cerr << "Ошибка: не удалось создать файл output.txt" << endl;
 
-        // Освобождение памяти
+      
         for (int i = 0; i < m; i++) {
             delete[] matrix[i];
         }
@@ -145,10 +135,10 @@ int main() {
     printMatrixToFile(output, matrix, m, n);
     output << "\nРанг матрицы системы: " << rank << endl;
 
-    // Определение типа системы по рангу
+ 
     output << "\nАнализ системы:" << endl;
 
-    // Проверка на несовместность (наличие строки вида 0 = b, где b != 0)
+   
     bool inconsistent = false;
     for (int i = 0; i < m; i++) {
         bool allZero = true;
@@ -179,7 +169,7 @@ int main() {
 
     cout << "\nРезультат сохранен в файл output.txt" << endl;
 
-    // Освобождение памяти
+   
     for (int i = 0; i < m; i++) {
         delete[] matrix[i];
     }
