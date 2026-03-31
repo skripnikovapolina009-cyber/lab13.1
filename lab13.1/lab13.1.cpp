@@ -48,14 +48,15 @@ int gaussJordanToEchelon(double** a, int m, int n) {
         
         for (int i = row + 1; i < m; i++) {
             double factor = a[i][col];
-            if (fabs(factor) > 1e-9) {
+            if (fabs(factor) > 1e-9) { 
                 for (int j = col; j <= n; j++) {
                     a[i][j] -= factor * a[row][j];
                 }
             }
         }
 
-        rank++;
+        rank++
+            ;
         row++;
         col++;
     }
